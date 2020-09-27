@@ -1,0 +1,27 @@
+{
+  "name": "startguildwars2",
+  "version": "0.1.0",
+  "description": "a convenient pre-starter for guild wars 2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keenghost/StartGuildwars2.git"
+  },
+  "license": "MIT",
+  "author": "keenghost",
+  "keywords": [
+    "guild wars 2",
+    "start guild wars 2"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "build": "gulp build"
+  },
+  "devDependencies": {
+    "del": "5.1.0",
+    "gulp": "4.0.2",
+    "iconv-lite": "0.6.2",
+    "innosetup-compiler": "5.6.1"
+  }
+}

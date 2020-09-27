@@ -1,0 +1,50 @@
+﻿<UserControl
+    x:Class="StartGuildwars2.View.PageLauncherView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:StartGuildwars2.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:StartGuildwars2.View"
+    xmlns:vm="clr-namespace:StartGuildwars2.ViewModel"
+    d:DesignHeight="528"
+    d:DesignWidth="547"
+    DataContext="{Binding PageLauncher, Source={StaticResource Locator}}"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <view:ComLaunchGamePanelView Grid.Row="0" GameType="MF" />
+
+            <view:ComLaunchGamePanelView Grid.Row="1" GameType="GF" />
+
+            <StackPanel Grid.Row="2" Margin="32,0">
+                <DockPanel LastChildFill="False">
+                    <ToggleButton IsChecked="{Binding ExitOnStartup, Mode=OneWay}" Style="{StaticResource ToggleButtonSwitch}">
+                        <hc:Interaction.Triggers>
+                            <hc:EventTrigger EventName="Checked">
+                                <hc:EventToCommand Command="{Binding ToggleExitOnStartupCommand}" CommandParameter="check" />
+                            </hc:EventTrigger>
+                            <hc:EventTrigger EventName="Unchecked">
+                                <hc:EventToCommand Command="{Binding ToggleExitOnStartupCommand}" CommandParameter="uncheck" />
+                            </hc:EventTrigger>
+                        </hc:Interaction.Triggers>
+                    </ToggleButton>
+                    <TextBlock
+                        Margin="8,0"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="启动游戏后自动退出 StartGuildwars2" />
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

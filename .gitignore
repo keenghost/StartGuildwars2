@@ -1,0 +1,33 @@
+# node dependency directory
+/node_modules
+
+# npm cache directory
+.npm
+
+# vs config directory
+.vs
+
+# debug output directory
+/bin
+
+# release install package output directory
+/Dist
+
+# debug directory
+/obj
+
+# wpf dependency diretory
+/packages
+
+# temp directory
+/Temp
+
+# fody auto gen file
+/FodyWeavers.xsd
+
+# npm lock file
+/package-lock.json
+
+#
+/Properties/Resources.Designer.cs
+/Properties/Settings.Designer.cs

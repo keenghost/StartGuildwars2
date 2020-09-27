@@ -1,0 +1,55 @@
+﻿<UserControl
+    x:Class="StartGuildwars2.View.ComAddonsProgressDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:StartGuildwars2.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:StartGuildwars2.View"
+    d:DesignHeight="480"
+    d:DesignWidth="480"
+    DataContext="{Binding ComAddonsProgressDialog, Source={StaticResource Locator}}"
+    mc:Ignorable="d">
+    <view:BaseDialogView
+        DialogShowClose="False"
+        DialogSize="Small"
+        DialogTitle="安装/卸载/更新">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type local:ComAddonsProgressDialogView}}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Grid.Row="0">
+                <TextBlock
+                    Margin="16,0,16,16"
+                    FontSize="15"
+                    Text="{Binding ProgressText, FallbackValue=DefaultText}"
+                    TextWrapping="Wrap" />
+            </ScrollViewer>
+
+            <DockPanel
+                Grid.Row="1"
+                Margin="16"
+                HorizontalAlignment="Center"
+                LastChildFill="False">
+                <Button
+                    Width="60"
+                    hc:BorderElement.CornerRadius="2"
+                    Command="{Binding CompleteCommand}"
+                    Content="关闭"
+                    Style="{StaticResource ButtonDanger}"
+                    Visibility="{Binding ShowCloseButton, Converter={StaticResource Boolean2VisibilityConverter}, FallbackValue=Collapsed}" />
+                <Button
+                    Width="60"
+                    hc:BorderElement.CornerRadius="2"
+                    Command="{Binding CompleteCommand}"
+                    Content="完成"
+                    Style="{StaticResource ButtonPrimary}"
+                    Visibility="{Binding ShowFinishButton, Converter={StaticResource Boolean2VisibilityConverter}, FallbackValue=Visible}" />
+            </DockPanel>
+        </Grid>
+    </view:BaseDialogView>
+</UserControl>

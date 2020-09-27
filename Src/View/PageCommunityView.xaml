@@ -1,0 +1,145 @@
+﻿<UserControl
+    x:Class="StartGuildwars2.View.PageCommunityView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:StartGuildwars2.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:StartGuildwars2.View"
+    xmlns:vm="clr-namespace:StartGuildwars2.ViewModel"
+    d:DesignHeight="528"
+    d:DesignWidth="547"
+    DataContext="{Binding PageCommunity, Source={StaticResource Locator}}"
+    mc:Ignorable="d">
+    <ScrollViewer Padding="32,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Visibility="{Binding Loading, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Visibility="{Binding CommunityList.Count, Converter={StaticResource Int2VisibilityConverter}}">
+                    <ItemsControl ItemsSource="{Binding CommunityList}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,8">
+                                    <TextBlock
+                                        Margin="0,0,0,8"
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Text="{Binding category}" />
+
+                                    <ItemsControl ItemsSource="{Binding list}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <hc:Card
+                                                    Margin="20,8"
+                                                    hc:BorderThickness="1"
+                                                    Header="{Binding .}">
+                                                    <hc:Card.HeaderTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <TextBlock
+                                                                    Grid.Column="0"
+                                                                    Margin="10"
+                                                                    HorizontalAlignment="Left"
+                                                                    FontSize="16"
+                                                                    Foreground="Black"
+                                                                    Text="{Binding name}" />
+
+                                                                <DockPanel
+                                                                    Grid.Column="1"
+                                                                    Margin="8,0"
+                                                                    LastChildFill="False">
+                                                                    <hc:Badge
+                                                                        Height="30"
+                                                                        Margin="8,0,0,0"
+                                                                        Status="Processing"
+                                                                        Style="{StaticResource BadgeDanger}"
+                                                                        Visibility="{Binding recommend, Converter={StaticResource Boolean2VisibilityConverter}}">
+                                                                        <Button
+                                                                            Command="{Binding DataContext.HyperlinkCommand, RelativeSource={RelativeSource AncestorType={x:Type local:PageCommunityView}}}"
+                                                                            CommandParameter="{Binding website}"
+                                                                            Content="Go"
+                                                                            Style="{StaticResource ButtonPrimary}" />
+                                                                    </hc:Badge>
+
+                                                                    <Button
+                                                                        hc:BorderElement.CornerRadius="2"
+                                                                        Command="{Binding DataContext.HyperlinkCommand, RelativeSource={RelativeSource AncestorType={x:Type local:PageCommunityView}}}"
+                                                                        CommandParameter="{Binding website}"
+                                                                        Content="Go"
+                                                                        Style="{StaticResource ButtonPrimary}"
+                                                                        Visibility="{Binding recommend, Converter={StaticResource Boolean2VisibilityReConverter}}" />
+                                                                </DockPanel>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </hc:Card.HeaderTemplate>
+
+                                                    <StackPanel Margin="8,0,8,8">
+                                                        <TextBlock
+                                                            Margin="2,8,0,0"
+                                                            Foreground="Gray"
+                                                            Text="{Binding description}" />
+
+                                                        <ItemsControl
+                                                            Margin="0,4,0,0"
+                                                            ItemsSource="{Binding tags}"
+                                                            Visibility="{Binding tags.Count, Converter={StaticResource Int2VisibilityConverter}}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Label
+                                                                        Height="20"
+                                                                        Margin="2"
+                                                                        Padding="8,4"
+                                                                        HorizontalAlignment="Left"
+                                                                        hc:BorderElement.CornerRadius="2"
+                                                                        Content="{Binding content}"
+                                                                        FontSize="10"
+                                                                        Style="{StaticResource LabelInfo}" />
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </hc:Card>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <DockPanel VerticalAlignment="Center" Visibility="{Binding CommunityList.Count, Converter={StaticResource Int2VisibilityReConverter}}">
+                    <Button
+                        Command="{Binding ReloadCommand}"
+                        Content="重新加载"
+                        IsEnabled="{Binding ReloadFreezing, Converter={StaticResource Boolean2BooleanReConverter}}"
+                        Style="{StaticResource ButtonPrimary}" />
+                </DockPanel>
+            </Grid>
+
+            <DockPanel VerticalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource Boolean2VisibilityConverter}}">
+                <hc:LoadingCircle />
+            </DockPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
