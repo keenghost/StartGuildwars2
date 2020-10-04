@@ -84,7 +84,13 @@
                         VerticalAlignment="Center"
                         FontSize="14"
                         Foreground="Green"
-                        Text="新版本: 0.1.0.1" />
+                        Text="新版本:" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="Green"
+                        Text="{Binding LatestVersion}" />
                     <TextBlock
                         Margin="8,0"
                         VerticalAlignment="Center"
