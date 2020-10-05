@@ -6,14 +6,20 @@ using StartGuildwars2.Model;
 using StartGuildwars2.View;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 
 namespace StartGuildwars2.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
+
         private readonly ConfigManager _ConfigManager;
 
         public object CurrentView { get; private set; } = null;
@@ -23,6 +29,8 @@ namespace StartGuildwars2.ViewModel
 
         public MainWindowViewModel()
         {
+            CheckMutex();
+
             GVar.Instance.PathManager = new PathManager();
             GVar.Instance.ConfigManager = new ConfigManager();
 
@@ -46,6 +54,23 @@ namespace StartGuildwars2.ViewModel
         private void SwitchItem(string viewKey)
         {
             SetCurrentView(viewKey);
+        }
+
+        private void CheckMutex()
+        {
+            new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool isRunning);
+
+            if (isRunning)
+            {
+                var processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
+
+                if (processes.Length > 0)
+                {
+                    SwitchToThisWindow(processes[0].MainWindowHandle, true);
+                }
+
+                Environment.Exit(1);
+            }
         }
 
         private void SetCurrentView(string viewKey)
