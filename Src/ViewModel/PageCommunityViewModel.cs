@@ -41,7 +41,7 @@ namespace StartGuildwars2.ViewModel
 
             HttpHelper.GetAsync(new RequestGetModel<List<CommunityCategoryModel>>
             {
-                Path = "/api/v1/sgw2/community",
+                Path = "/api/v1/sgw2/communities",
                 SuccessCallback = res =>
                 {
                     CommunityList = new ObservableCollection<CommunityCategoryModel>(res.result);

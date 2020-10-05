@@ -84,7 +84,7 @@ namespace StartGuildwars2.ViewModel
         {
             HttpHelper.GetAsync(new RequestGetModel<List<AddonItemModel>>
             {
-                Path = "/api/v1/sgw2/addon",
+                Path = "/api/v1/sgw2/addons",
                 Query = new Dictionary<string, string>{
                     { "type", GameType },
                 },
