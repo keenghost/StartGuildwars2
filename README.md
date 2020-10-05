@@ -1,7 +1,5 @@
 # STARTGUILDWARS2
 
-<br>
-This Repo is provided with Chinese only, Thank you!
+<br>This Repo is provided with Chinese only, Thank you!<br>
 
-<br>
 [中文 README.md](./README-zh.md)
