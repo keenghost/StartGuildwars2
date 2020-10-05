@@ -21,6 +21,7 @@ namespace StartGuildwars2.ViewModel
         public static extern bool SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 
         private readonly ConfigManager _ConfigManager;
+        private Mutex _Mutex;
 
         public object CurrentView { get; private set; } = null;
 
@@ -58,9 +59,11 @@ namespace StartGuildwars2.ViewModel
 
         private void CheckMutex()
         {
-            new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool isRunning);
+            var mutexName = Process.GetCurrentProcess().ProcessName + "Mutex";
 
-            if (isRunning)
+            _Mutex = new Mutex(true, mutexName, out bool createNew);
+
+            if (!createNew)
             {
                 var processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
 
@@ -69,7 +72,7 @@ namespace StartGuildwars2.ViewModel
                     SwitchToThisWindow(processes[0].MainWindowHandle, true);
                 }
 
-                Environment.Exit(1);
+                Environment.Exit(0);
             }
         }
 
