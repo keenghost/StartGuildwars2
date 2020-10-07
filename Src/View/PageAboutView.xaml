@@ -149,7 +149,7 @@
                     Text="使用即同意:" />
                 <TextBlock Margin="8,0" FontSize="14">
                     <TextBlock>
-                        <Hyperlink NavigateUri="https://gw2.keenghost.com/sgw2/privacy">
+                        <Hyperlink NavigateUri="https://gw2.keenghost.com/launcher/privacy">
                             <hc:Interaction.Triggers>
                                 <hc:EventTrigger EventName="RequestNavigate">
                                     <hc:EventToCommand Command="{Binding HyperlinkCommand}" PassEventArgsToCommand="True" />
