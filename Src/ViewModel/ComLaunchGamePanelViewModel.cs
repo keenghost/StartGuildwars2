@@ -128,7 +128,7 @@ namespace StartGuildwars2.ViewModel
         {
             UtilHelper.ShowConfirmDialog(new ConfirmDialogInterfaceModel
             {
-                Content = "将删除相关配置，该操作不会影响已安装的插件以及游戏文件。\r\n删除后无法恢复配置，确定删除吗？",
+                Content = "将删除相关配置，该操作不会影响已安装的插件以及游戏文件。\r\n但已安装插件列表无法识别。\r\n\r\n删除后无法恢复配置，确定删除吗？",
                 ConfirmCallback = () =>
                 {
                     _ConfigManager.ResetLauncher(GameType);

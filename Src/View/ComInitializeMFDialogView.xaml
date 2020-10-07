@@ -86,7 +86,7 @@
                             </RadioButton>
                         </hc:ButtonGroup>
                     </DockPanel>
-                    <DockPanel Margin="10,0,0,6" HorizontalAlignment="Left">
+                    <DockPanel Margin="10,0,0,10" HorizontalAlignment="Left">
                         <ComboBox
                             Width="280"
                             hc:InfoElement.Title="选择用户"
@@ -96,8 +96,7 @@
                             SelectedItem="{Binding PickUsername}"
                             Style="{StaticResource ComboBoxExtend}"
                             Visibility="{Binding UserType, Converter={StaticResource Boolean2VisibilityReConverter}}" />
-                    </DockPanel>
-                    <DockPanel Margin="10,0,0,6" HorizontalAlignment="Left">
+
                         <TextBox
                             Width="280"
                             hc:InfoElement.Title="用户名"
