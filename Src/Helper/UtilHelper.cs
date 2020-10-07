@@ -145,6 +145,7 @@ namespace StartGuildwars2.Helper
                     UseShellExecute = false,
                     LoadUserProfile = true,
                     CreateNoWindow = true,
+                    RedirectStandardInput = true,
                 };
 
                 var p = Process.Start(startInfo);
