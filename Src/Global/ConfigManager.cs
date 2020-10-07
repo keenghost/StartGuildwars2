@@ -50,7 +50,7 @@ namespace StartGuildwars2.Global
             GFPath = (savedConfig["GFPath"] ?? "").ToString();
             MFUsername = (savedConfig["MFUsername"] ?? "").ToString();
             MFPassword = (savedConfig["MFPassword"] ?? "").ToString();
-            ExitOnStartup = (bool)(savedConfig["ExitOnStartup"] ?? false);
+            ExitOnStartup = (bool)(savedConfig["ExitOnStartup"] ?? true);
             CheckUpdateOnStartup = (bool)(savedConfig["CheckUpdateOnStartup"] ?? true);
 
             var rawMFStartupArgumentList = savedConfig["MFStartupArgumentList"] == null ? new List<JToken>() : savedConfig["MFStartupArgumentList"].ToList();
