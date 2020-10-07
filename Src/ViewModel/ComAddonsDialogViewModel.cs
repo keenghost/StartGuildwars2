@@ -343,22 +343,55 @@ namespace StartGuildwars2.ViewModel
 
         private void ShowAddonProgressDialog(List<AddonStepModel> steps)
         {
-            Dialog.Show<ComAddonsProgressDialogView>("DialogContainer").Initialize<ComAddonsProgressDialogViewModel>(vm =>
-            {
-                vm.DialogCallback = (shouldUpdate) =>
-                {
-                    if ((bool)shouldUpdate)
-                    {
-                        UpdateDisplayAddonList();
-                    }
-                };
+            var willUninstallList = steps.Where(item => item.Action == "UNINSTALL").ToList();
+            var willInstallList = steps.Where(item => item.Action == "INSTALL").ToList();
+            var content = "";
 
-                vm.Prepare(new AddonProgressMessageModel
+            if (willUninstallList.Count > 0)
+            {
+                content += "将卸载以下插件:\r\n";
+
+                willUninstallList.ForEach(item =>
                 {
-                    Type = GameType,
-                    Addons = new List<AddonItemModel>(Addons),
-                    AddonSteps = steps,
+                    content = content + "- " + item.AddonName + "\r\n";
                 });
+
+                content += "\r\n";
+            }
+
+            if (willInstallList.Count > 0)
+            {
+                content += "将安装以下插件:\r\n";
+
+                willInstallList.ForEach(item =>
+                {
+                    content = content + "- " + item.AddonName + "\r\n";
+                });
+            }
+
+            UtilHelper.ShowConfirmDialog(new ConfirmDialogInterfaceModel
+            {
+                Content = content,
+                ConfirmCallback = () =>
+                {
+                    Dialog.Show<ComAddonsProgressDialogView>("DialogContainer").Initialize<ComAddonsProgressDialogViewModel>(vm =>
+                    {
+                        vm.DialogCallback = (shouldUpdate) =>
+                        {
+                            if ((bool)shouldUpdate)
+                            {
+                                UpdateDisplayAddonList();
+                            }
+                        };
+
+                        vm.Prepare(new AddonProgressMessageModel
+                        {
+                            Type = GameType,
+                            Addons = new List<AddonItemModel>(Addons),
+                            AddonSteps = steps,
+                        });
+                    });
+                },
             });
         }
     }
