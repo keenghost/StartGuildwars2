@@ -64,7 +64,7 @@ function makeWinInstaller(options) {
 }
 
 function packWinInstaller() {
-  const version = '0.1.1.0'
+  const version = '0.1.2.0'
 
   return makeWinInstaller({
     name: 'StartGuildwars2',
