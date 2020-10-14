@@ -104,16 +104,14 @@ namespace StartGuildwars2.Helper
 
         public static bool RemoveAndCreateDirectoryLink(string sourceDirectory, string targetDirectory)
         {
-            if (Directory.Exists(sourceDirectory))
+            try
             {
-                try
-                {
-                    Directory.Delete(sourceDirectory, true);
-                }
-                catch
-                {
-                    return false;
-                }
+                Directory.CreateDirectory(sourceDirectory);
+                Directory.Delete(sourceDirectory, true);
+            }
+            catch
+            {
+                return false;
             }
 
             return CreateSymbolicLink(sourceDirectory, targetDirectory, 1);
