@@ -106,11 +106,10 @@ namespace StartGuildwars2.ViewModel
                 if (result == true)
                 {
                     var filepath = openFileDialog.FileName;
-                    var directory = Path.GetDirectoryName(filepath);
 
                     if (!string.IsNullOrEmpty(_ConfigManager.MFPath))
                     {
-                        if (_ConfigManager.MFPath.StartsWith(directory, StringComparison.InvariantCultureIgnoreCase))
+                        if (0 == string.Compare(Path.GetDirectoryName(filepath), Path.GetDirectoryName(_ConfigManager.MFPath), true))
                         {
                             UtilHelper.ShowAlertDialog(new AlertDialogInterfaceModel { Content = "美服已选择此路径，请重新选择其它路径" });
                             return;
@@ -269,9 +268,8 @@ namespace StartGuildwars2.ViewModel
             foreach (Process p in Gw2Processes)
             {
                 var filename = p.MainModule.FileName;
-                var filepath = Path.GetDirectoryName(GamePath);
 
-                if (filename.StartsWith(filepath, StringComparison.InvariantCultureIgnoreCase))
+                if (0 == string.Compare(Path.GetDirectoryName(filename), Path.GetDirectoryName(GamePath), true))
                 {
                     _RunningProcess = p;
                     _ConfigManager.UpdateRunningState(true, GameType);

@@ -49,11 +49,10 @@ namespace StartGuildwars2.ViewModel
             if (result == true)
             {
                 var filepath = openFileDialog.FileName;
-                var directory = Path.GetDirectoryName(filepath);
 
                 if (!string.IsNullOrEmpty(_ConfigManager.GFPath))
                 {
-                    if (_ConfigManager.GFPath.StartsWith(directory, StringComparison.InvariantCultureIgnoreCase))
+                    if (0 == string.Compare(Path.GetDirectoryName(filepath), Path.GetDirectoryName(_ConfigManager.GFPath), true))
                     {
                         UtilHelper.ShowAlertDialog(new Model.AlertDialogInterfaceModel { Content = "国服已选择此路径，请重新选择其它路径" });
                         return;
