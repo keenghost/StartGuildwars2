@@ -45,8 +45,6 @@ namespace StartGuildwars2.ViewModel
             {
                 CheckInstalledAddons();
 
-                Thread.Sleep(UtilHelper.GetRandomNumber(2000, 4000));
-
                 GetList();
             });
 
