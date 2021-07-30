@@ -91,7 +91,7 @@ namespace StartGuildwars2.ViewModel
                 {
                     new Thread(() =>
                     {
-                        Thread.Sleep(UtilHelper.GetRandomNumber(2000, 4000));
+                        Thread.Sleep(UtilHelper.GetRandomNumber(1000, 2000));
                         CheckUpdateLoading = false;
                     }).Start();
                 }
