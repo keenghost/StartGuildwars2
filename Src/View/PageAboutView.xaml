@@ -36,7 +36,25 @@
                     Margin="8,0"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Text="启动时检查更新" />
+                    Text="启动时检查主程序更新" />
+            </DockPanel>
+
+            <DockPanel Margin="8,8,8,8">
+                <ToggleButton IsChecked="{Binding CheckAddonUpdateOnStartup, Mode=OneWay}" Style="{StaticResource ToggleButtonSwitch}">
+                    <hc:Interaction.Triggers>
+                        <hc:EventTrigger EventName="Checked">
+                            <hc:EventToCommand Command="{Binding ToggleCheckAddonUpdateOnStartupCommand}" CommandParameter="check" />
+                        </hc:EventTrigger>
+                        <hc:EventTrigger EventName="Unchecked">
+                            <hc:EventToCommand Command="{Binding ToggleCheckAddonUpdateOnStartupCommand}" CommandParameter="uncheck" />
+                        </hc:EventTrigger>
+                    </hc:Interaction.Triggers>
+                </ToggleButton>
+                <TextBlock
+                    Margin="8,0"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Text="启动时检查插件更新" />
             </DockPanel>
 
             <DockPanel Margin="8" LastChildFill="False">

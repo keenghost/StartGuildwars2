@@ -39,6 +39,12 @@ namespace StartGuildwars2.ViewModel
 
             SetCurrentView("LAUNCHER");
             CheckUpdate();
+
+            if (_ConfigManager.CheckAddonUpdateOnStartup)
+            {
+                _ConfigManager.ConstructAddonComponent("MF");
+                _ConfigManager.ConstructAddonComponent("GF");
+            }
         }
 
         public List<MenuItemModel> MenuList { get; private set; } = new List<MenuItemModel>(new MenuItemModel[] {

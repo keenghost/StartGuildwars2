@@ -18,6 +18,7 @@ namespace StartGuildwars2.ViewModel
         private readonly ConfigManager _ConfigManager;
 
         public bool CheckUpdateOnStartup { get; private set; }
+        public bool CheckAddonUpdateOnStartup { get; private set; }
         public string Version { get; private set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public string LatestVersion { get; private set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public string LatestVersionSrc { get; private set; }
@@ -27,6 +28,7 @@ namespace StartGuildwars2.ViewModel
         public bool InstallUpdateLoading { get; private set; }
 
         public RelayCommand<string> ToggleCheckUpdateOnStartupCommand => new Lazy<RelayCommand<string>>(() => new RelayCommand<string>(ToggleExitOnStartup)).Value;
+        public RelayCommand<string> ToggleCheckAddonUpdateOnStartupCommand => new Lazy<RelayCommand<string>>(() => new RelayCommand<string>(ToggleCheckAddonUpdateOnStartup)).Value;
         public RelayCommand CheckUpdateCommand => new Lazy<RelayCommand>(() => new RelayCommand(CheckUpdate)).Value;
         public RelayCommand InstallUpdateCommand => new Lazy<RelayCommand>(() => new RelayCommand(InstallUpdate)).Value;
         public RelayCommand<RequestNavigateEventArgs> HyperlinkCommand => new Lazy<RelayCommand<RequestNavigateEventArgs>>(() => new RelayCommand<RequestNavigateEventArgs>(Hyperlink)).Value;
@@ -36,6 +38,7 @@ namespace StartGuildwars2.ViewModel
         {
             _ConfigManager = GVar.Instance.ConfigManager;
             CheckUpdateOnStartup = _ConfigManager.CheckUpdateOnStartup;
+            CheckAddonUpdateOnStartup = _ConfigManager.CheckAddonUpdateOnStartup;
             CheckUpdate();
         }
 
@@ -57,6 +60,20 @@ namespace StartGuildwars2.ViewModel
 
                 case "uncheck":
                     _ConfigManager.SaveCheckUpdateOnStartup(false);
+                    break;
+            }
+        }
+
+        private void ToggleCheckAddonUpdateOnStartup(string IsChecked)
+        {
+            switch (IsChecked)
+            {
+                case "check":
+                    _ConfigManager.SaveCheckAddonUpdateOnStartup(true);
+                    break;
+
+                case "uncheck":
+                    _ConfigManager.SaveCheckAddonUpdateOnStartup(false);
                     break;
             }
         }
