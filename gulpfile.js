@@ -3,6 +3,7 @@ const path = require('path')
 const gulp = require('gulp')
 const iconv = require('iconv-lite')
 const innosetupCompiler = require('innosetup-compiler')
+const packageInfo = require('./package.json')
 
 function makeWinInstaller(options) {
   const {
@@ -64,7 +65,7 @@ function makeWinInstaller(options) {
 }
 
 function packWinInstaller() {
-  const version = '0.1.3.0'
+  const version = packageInfo.version + '.0'
 
   return makeWinInstaller({
     name: 'StartGuildwars2',
@@ -82,6 +83,24 @@ function packWinInstaller() {
   })
 }
 
+function updateVersion() {
+  const version = packageInfo.version + '.0'
+  let assemblyContent = fs.readFileSync(path.resolve(__dirname, 'Properties/AssemblyInfo.cs'), { encoding: 'utf8' })
+
+  assemblyContent = assemblyContent.replace(/AssemblyVersion\(".*"\)/, `AssemblyVersion("${version}")`)
+  assemblyContent = assemblyContent.replace(/AssemblyFileVersion\(".*"\)/, `AssemblyFileVersion("${version}")`)
+
+  fs.writeFileSync(path.resolve(__dirname, 'Properties/AssemblyInfo.cs'), assemblyContent)
+
+  console.log(`updated to v${version}`)
+
+  return Promise.resolve()
+}
+
 gulp.task('build', gulp.series(
   packWinInstaller,
+))
+
+gulp.task('update', gulp.series(
+  updateVersion,
 ))
