@@ -21,7 +21,7 @@ namespace StartGuildwars2.ViewModel
     {
         private string _GameType;
         private Process _RunningProcess;
-        private readonly ConfigManager _ConfigManager;
+        public ConfigManager _ConfigManager { get; private set; }
 
         public string TypeText { get; private set; }
         public string GamePath { get; private set; }

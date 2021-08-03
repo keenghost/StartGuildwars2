@@ -18,9 +18,14 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <hc:LoadingCircle Visibility="{Binding Loading, Converter={StaticResource Boolean2VisibilityConverter}}" />
+            <Grid Visibility="{Binding Path=IsMF, Converter={StaticResource Boolean2VisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <ListBox
+                <hc:LoadingCircle Visibility="{Binding Path=_ConfigManager.MFAddonListLoading, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <ListBox
                 Grid.Row="0"
                 Margin="0,10"
                 Padding="10,0"
@@ -29,34 +34,34 @@
                 ItemsSource="{Binding DisplayAddons}"
                 ScrollViewer.CanContentScroll="True"
                 Style="{StaticResource WrapPanelHorizontalListBox}"
-                Visibility="{Binding Loading, Converter={StaticResource Boolean2VisibilityReConverter}}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <hc:Card
+                Visibility="{Binding Path=_ConfigManager.MFAddonListLoading, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <hc:Card
                             Width="310"
                             Margin="8"
                             hc:BorderThickness="1"
                             Footer="{Binding .}"
                             Header="{Binding .}">
-                            <hc:Card.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock
+                                <hc:Card.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
                                         Margin="10"
                                         HorizontalAlignment="Left"
                                         FontSize="16"
                                         Text="{Binding DisplayName}" />
-                                </DataTemplate>
-                            </hc:Card.HeaderTemplate>
+                                    </DataTemplate>
+                                </hc:Card.HeaderTemplate>
 
-                            <StackPanel>
-                                <TextBlock
+                                <StackPanel>
+                                    <TextBlock
                                     Margin="10"
                                     Foreground="Gray"
                                     Text="{Binding Description}"
                                     TextWrapping="Wrap" />
 
-                                <DockPanel Margin="8,0" LastChildFill="False">
-                                    <Label
+                                    <DockPanel Margin="8,0" LastChildFill="False">
+                                        <Label
                                         Height="20"
                                         Margin="2,6"
                                         Padding="8,4"
@@ -65,7 +70,7 @@
                                         Content="{Binding Version}"
                                         FontSize="10"
                                         Style="{StaticResource LabelInfo}" />
-                                    <Label
+                                        <Label
                                         Height="20"
                                         Margin="2,6"
                                         Padding="8,4"
@@ -75,19 +80,19 @@
                                         FontSize="10"
                                         Style="{StaticResource LabelInfo}"
                                         Visibility="{Binding IsZh, Converter={StaticResource Boolean2VisibilityConverter}}" />
-                                </DockPanel>
-                            </StackPanel>
+                                    </DockPanel>
+                                </StackPanel>
 
-                            <hc:Card.FooterTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                                <hc:Card.FooterTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
 
-                                        <DockPanel Grid.Column="0" LastChildFill="False">
-                                            <Button
+                                            <DockPanel Grid.Column="0" LastChildFill="False">
+                                                <Button
                                                 Height="28"
                                                 Padding="8,0"
                                                 hc:BorderElement.CornerRadius="2"
@@ -96,13 +101,13 @@
                                                 Content="详情"
                                                 FontSize="12"
                                                 Style="{StaticResource ButtonPrimary}" />
-                                        </DockPanel>
+                                            </DockPanel>
 
-                                        <DockPanel
+                                            <DockPanel
                                             Grid.Column="1"
                                             LastChildFill="False"
                                             Visibility="{Binding IsInstalled, Converter={StaticResource Boolean2VisibilityReConverter}}">
-                                            <Button
+                                                <Button
                                                 Height="28"
                                                 Padding="8,0"
                                                 hc:BorderElement.CornerRadius="2"
@@ -112,19 +117,19 @@
                                                 FontSize="12"
                                                 Style="{StaticResource ButtonPrimary}"
                                                 Visibility="{Binding CanInstall, Converter={StaticResource Boolean2VisibilityConverter}}" />
-                                            <Label
+                                                <Label
                                                 Padding="6"
                                                 Content="安装"
                                                 Foreground="Gray"
                                                 ToolTip="{Binding ConflictDescription}"
                                                 Visibility="{Binding CanInstall, Converter={StaticResource Boolean2VisibilityReConverter}}" />
-                                        </DockPanel>
+                                            </DockPanel>
 
-                                        <DockPanel
+                                            <DockPanel
                                             Grid.Column="1"
                                             LastChildFill="False"
                                             Visibility="{Binding IsInstalled, Converter={StaticResource Boolean2VisibilityConverter}}">
-                                            <Button
+                                                <Button
                                                 Height="28"
                                                 Padding="8,0"
                                                 hc:BorderElement.CornerRadius="2"
@@ -133,13 +138,13 @@
                                                 Content="卸载"
                                                 FontSize="12"
                                                 Style="{StaticResource ButtonDanger}" />
-                                            <hc:Badge
+                                                <hc:Badge
                                                 Height="30"
                                                 Margin="8,0,0,0"
                                                 Status="Processing"
                                                 Style="{StaticResource BadgeDanger}"
                                                 Visibility="{Binding CanUpdate, Converter={StaticResource Boolean2VisibilityConverter}}">
-                                                <Button
+                                                    <Button
                                                     Height="28"
                                                     Padding="8,0"
                                                     hc:BorderElement.CornerRadius="2"
@@ -148,15 +153,162 @@
                                                     Content="更新"
                                                     FontSize="12"
                                                     Style="{StaticResource ButtonInfo}" />
-                                            </hc:Badge>
-                                        </DockPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </hc:Card.FooterTemplate>
-                        </hc:Card>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                                                </hc:Badge>
+                                            </DockPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </hc:Card.FooterTemplate>
+                            </hc:Card>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Grid Visibility="{Binding Path=IsMF, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <hc:LoadingCircle Visibility="{Binding Path=_ConfigManager.GFAddonListLoading, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+                <ListBox
+                Grid.Row="0"
+                Margin="0,10"
+                Padding="10,0"
+                VerticalAlignment="Top"
+                BorderThickness="0"
+                ItemsSource="{Binding DisplayAddons}"
+                ScrollViewer.CanContentScroll="True"
+                Style="{StaticResource WrapPanelHorizontalListBox}"
+                Visibility="{Binding Path=_ConfigManager.GFAddonListLoading, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <hc:Card
+                            Width="310"
+                            Margin="8"
+                            hc:BorderThickness="1"
+                            Footer="{Binding .}"
+                            Header="{Binding .}">
+                                <hc:Card.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
+                                        Margin="10"
+                                        HorizontalAlignment="Left"
+                                        FontSize="16"
+                                        Text="{Binding DisplayName}" />
+                                    </DataTemplate>
+                                </hc:Card.HeaderTemplate>
+
+                                <StackPanel>
+                                    <TextBlock
+                                    Margin="10"
+                                    Foreground="Gray"
+                                    Text="{Binding Description}"
+                                    TextWrapping="Wrap" />
+
+                                    <DockPanel Margin="8,0" LastChildFill="False">
+                                        <Label
+                                        Height="20"
+                                        Margin="2,6"
+                                        Padding="8,4"
+                                        HorizontalAlignment="Left"
+                                        hc:BorderElement.CornerRadius="2"
+                                        Content="{Binding Version}"
+                                        FontSize="10"
+                                        Style="{StaticResource LabelInfo}" />
+                                        <Label
+                                        Height="20"
+                                        Margin="2,6"
+                                        Padding="8,4"
+                                        HorizontalAlignment="Left"
+                                        hc:BorderElement.CornerRadius="2"
+                                        Content="中文"
+                                        FontSize="10"
+                                        Style="{StaticResource LabelInfo}"
+                                        Visibility="{Binding IsZh, Converter={StaticResource Boolean2VisibilityConverter}}" />
+                                    </DockPanel>
+                                </StackPanel>
+
+                                <hc:Card.FooterTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <DockPanel Grid.Column="0" LastChildFill="False">
+                                                <Button
+                                                Height="28"
+                                                Padding="8,0"
+                                                hc:BorderElement.CornerRadius="2"
+                                                Command="{Binding DataContext.HyperlinkCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ComAddonsDialogView}}}"
+                                                CommandParameter="{Binding Website}"
+                                                Content="详情"
+                                                FontSize="12"
+                                                Style="{StaticResource ButtonPrimary}" />
+                                            </DockPanel>
+
+                                            <DockPanel
+                                            Grid.Column="1"
+                                            LastChildFill="False"
+                                            Visibility="{Binding IsInstalled, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                                                <Button
+                                                Height="28"
+                                                Padding="8,0"
+                                                hc:BorderElement.CornerRadius="2"
+                                                Command="{Binding DataContext.InstallCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ComAddonsDialogView}}}"
+                                                CommandParameter="{Binding Name}"
+                                                Content="安装"
+                                                FontSize="12"
+                                                Style="{StaticResource ButtonPrimary}"
+                                                Visibility="{Binding CanInstall, Converter={StaticResource Boolean2VisibilityConverter}}" />
+                                                <Label
+                                                Padding="6"
+                                                Content="安装"
+                                                Foreground="Gray"
+                                                ToolTip="{Binding ConflictDescription}"
+                                                Visibility="{Binding CanInstall, Converter={StaticResource Boolean2VisibilityReConverter}}" />
+                                            </DockPanel>
+
+                                            <DockPanel
+                                            Grid.Column="1"
+                                            LastChildFill="False"
+                                            Visibility="{Binding IsInstalled, Converter={StaticResource Boolean2VisibilityConverter}}">
+                                                <Button
+                                                Height="28"
+                                                Padding="8,0"
+                                                hc:BorderElement.CornerRadius="2"
+                                                Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ComAddonsDialogView}}}"
+                                                CommandParameter="{Binding Name}"
+                                                Content="卸载"
+                                                FontSize="12"
+                                                Style="{StaticResource ButtonDanger}" />
+                                                <hc:Badge
+                                                Height="30"
+                                                Margin="8,0,0,0"
+                                                Status="Processing"
+                                                Style="{StaticResource BadgeDanger}"
+                                                Visibility="{Binding CanUpdate, Converter={StaticResource Boolean2VisibilityConverter}}">
+                                                    <Button
+                                                    Height="28"
+                                                    Padding="8,0"
+                                                    hc:BorderElement.CornerRadius="2"
+                                                    Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type local:ComAddonsDialogView}}}"
+                                                    CommandParameter="{Binding Name}"
+                                                    Content="更新"
+                                                    FontSize="12"
+                                                    Style="{StaticResource ButtonInfo}" />
+                                                </hc:Badge>
+                                            </DockPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </hc:Card.FooterTemplate>
+                            </hc:Card>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
         </Grid>
     </view:BaseDialogView>
 </UserControl>

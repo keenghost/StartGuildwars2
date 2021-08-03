@@ -19,12 +19,11 @@ namespace StartGuildwars2.ViewModel
     public class ComAddonsDialogViewModel : BaseDialogDataViewModel
     {
         private string GameType { get; set; }
-        private readonly ConfigManager _ConfigManager;
+        public ConfigManager _ConfigManager { get; private set; }
 
         public string DialogTitle { get; private set; }
-        public List<AddonItemModel> Addons { get; private set; }
-        public ObservableCollection<DisplayAddonItemModel> DisplayAddons { get; private set; }
-        public bool Loading { get; private set; } = true;
+        public ObservableCollection<DisplayAddonItemModel> DisplayAddons => _ConfigManager.GetDisplayAddonList(GameType);
+        public bool IsMF => GameType == "MF";
 
         public RelayCommand<string> HyperlinkCommand => new Lazy<RelayCommand<string>>(() => new RelayCommand<string>(Hyperlink)).Value;
         public RelayCommand<string> InstallCommand => new Lazy<RelayCommand<string>>(() => new RelayCommand<string>(Install)).Value;
@@ -41,150 +40,7 @@ namespace StartGuildwars2.ViewModel
             GameType = type;
             DialogTitle = "插件管理（" + (GameType == "GF" ? "国服" : "美服") + "）";
 
-            Thread prepareListThread = new Thread(() =>
-            {
-                CheckInstalledAddons();
-
-                GetList();
-            });
-
-            prepareListThread.Start();
-        }
-
-        private void CheckInstalledAddons()
-        {
-            var installedAddons = GetInstalledAddons();
-            var gamePath = GameType == "MF" ? _ConfigManager.MFPath : _ConfigManager.GFPath;
-            var shouldDeleteNames = new List<string>();
-
-            foreach (var installedAddon in installedAddons)
-            {
-                var mainDllPath = Path.Combine(gamePath, installedAddon.MainDll);
-
-                if (!File.Exists(mainDllPath))
-                {
-                    shouldDeleteNames.Add(installedAddon.Name);
-                    return;
-                }
-
-                installedAddon.Version = UtilHelper.GetExeFileVersion(mainDllPath);
-            }
-
-            foreach (var shouldDeleteName in shouldDeleteNames)
-            {
-                installedAddons = installedAddons.Where(item => item.Name != shouldDeleteName).ToList();
-            }
-
-            _ConfigManager.SaveInstalledAddonList(installedAddons, GameType);
-        }
-
-        private void GetList()
-        {
-            HttpHelper.GetAsync(new RequestGetModel<List<AddonItemModel>>
-            {
-                Path = "/api/v1/sgw2/addons",
-                Query = new Dictionary<string, string>{
-                    { "type", GameType },
-                },
-                SuccessCallback = res =>
-                {
-                    Addons = new List<AddonItemModel>(res.result);
-                    UpdateDisplayAddonList();
-
-                    Loading = false;
-                },
-            });
-        }
-
-        private void UpdateDisplayAddonList()
-        {
-            var installedAddons = GetInstalledAddons();
-            var displayAddons = new ObservableCollection<DisplayAddonItemModel>();
-
-            foreach (var addon in Addons)
-            {
-                var displayAddon = new DisplayAddonItemModel
-                {
-                    Name = addon.name,
-                    DisplayName = addon.displayName,
-                    Description = addon.description,
-                    Version = addon.version,
-                    Website = addon.website,
-                    IsZh = addon.zh,
-                    IsInstalled = false,
-                    CanInstall = true,
-                    CanUpdate = false,
-                };
-                var installedAddon = installedAddons.Find(item => item.Name == addon.name);
-
-                if (installedAddon != null)
-                {
-                    displayAddon.IsInstalled = true;
-                }
-
-                if (addon.outdated)
-                {
-                    displayAddons.Add(displayAddon);
-                    continue;
-                }
-
-                if (displayAddon.IsInstalled)
-                {
-                    if (UtilHelper.GetVersionWeight(addon.version) > UtilHelper.GetVersionWeight(installedAddon.Version))
-                    {
-                        displayAddon.CanUpdate = true;
-                    }
-
-                    displayAddons.Add(displayAddon);
-                    continue;
-                }
-
-                var canInstall = true;
-                var conflictDisplayNames = new List<string>();
-
-                foreach (var conflictAddonName in addon.conflict)
-                {
-                    if (installedAddons.Find(item => item.Name == conflictAddonName) != null)
-                    {
-                        canInstall = false;
-                        var confligAddon = Addons.Find(item => item.name == conflictAddonName);
-                        conflictDisplayNames.Add(conflictAddonName);
-                    }
-                }
-
-                displayAddon.CanInstall = canInstall;
-                if (conflictDisplayNames.Count > 0)
-                {
-                    var conflictDescription = "与已安装插件";
-
-                    foreach (var conflictDisplayName in conflictDisplayNames)
-                    {
-                        conflictDescription += "“" + conflictDisplayName + "”";
-                    }
-
-                    conflictDescription += "冲突";
-                    displayAddon.ConflictDescription = conflictDescription;
-                }
-
-                displayAddons.Add(displayAddon);
-            }
-
-            DisplayAddons = displayAddons;
-        }
-
-        private List<InstalledAddonItemModel> GetInstalledAddons()
-        {
-            switch (GameType)
-            {
-                case "MF":
-                    return new List<InstalledAddonItemModel>(_ConfigManager.MFInstalledAddonList);
-
-                case "GF":
-                    return new List<InstalledAddonItemModel>(_ConfigManager.GFInstalledAddonList);
-
-                default:
-                    return new List<InstalledAddonItemModel>();
-            }
+            _ConfigManager.FetchAddonList(GameType);
         }
 
         private void Hyperlink(string uri)
@@ -194,7 +50,8 @@ namespace StartGuildwars2.ViewModel
 
         private void Install(string name)
         {
-            var willInstallAddon = Addons.Find(item => item.name == name);
+            var TempAddonList = _ConfigManager.GetAddonList(GameType);
+            var willInstallAddon = TempAddonList.Find(item => item.name == name);
             var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             if (willInstallAddon == null)
@@ -229,8 +86,9 @@ namespace StartGuildwars2.ViewModel
         private List<string> GetWillInstallList(string name)
         {
             var list = new List<string>();
-            var installedList = GetInstalledAddons();
-            var addon = Addons.Find(item => item.name == name);
+            var TempAddonList = _ConfigManager.GetAddonList(GameType);
+            var installedList = _ConfigManager.GetInstalledAddonList(GameType);
+            var addon = TempAddonList.Find(item => item.name == name);
 
             foreach (var d in addon.dependency)
             {
@@ -246,8 +104,9 @@ namespace StartGuildwars2.ViewModel
         private void Update(string name)
         {
             var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var installedAddons = GetInstalledAddons();
-            var willInstallAddon = Addons.Find(item => item.name == name);
+            var TempAddonList = _ConfigManager.GetAddonList(GameType);
+            var installedAddons = _ConfigManager.GetInstalledAddonList(GameType);
+            var willInstallAddon = TempAddonList.Find(item => item.name == name);
             var willUninstallAddon = installedAddons.Find(item => item.Name == name);
             var steps = new List<AddonStepModel>();
 
@@ -290,7 +149,8 @@ namespace StartGuildwars2.ViewModel
 
         private void Uninstall(string name)
         {
-            var willUninstallAddon = Addons.Find(item => item.name == name);
+            var TempAddonList = _ConfigManager.GetAddonList(GameType);
+            var willUninstallAddon = TempAddonList.Find(item => item.name == name);
 
             if (willUninstallAddon == null)
             {
@@ -315,9 +175,10 @@ namespace StartGuildwars2.ViewModel
         private List<string> GetWillUninstallList(string name)
         {
             var list = new List<string>();
-            var installedList = GetInstalledAddons();
+            var TempAddonList = _ConfigManager.GetAddonList(GameType);
+            var installedList = _ConfigManager.GetInstalledAddonList(GameType);
 
-            foreach (var addon in Addons)
+            foreach (var addon in TempAddonList)
             {
                 if (addon.dependency.FindIndex(item => item == name) != -1 && installedList.Find(item => item.Name == addon.name) != null)
                 {
@@ -378,14 +239,14 @@ namespace StartGuildwars2.ViewModel
                         {
                             if ((bool)shouldUpdate)
                             {
-                                UpdateDisplayAddonList();
+                                _ConfigManager.UpdateDisplayAddonList(GameType);
                             }
                         };
 
                         vm.Prepare(new AddonProgressMessageModel
                         {
                             Type = GameType,
-                            Addons = new List<AddonItemModel>(Addons),
+                            Addons = _ConfigManager.GetAddonList(GameType),
                             AddonSteps = steps,
                         });
                     });

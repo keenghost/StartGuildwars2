@@ -152,13 +152,54 @@
                         Grid.Column="0"
                         HorizontalAlignment="Left"
                         LastChildFill="False">
-                        <Button
+                        <DockPanel Visibility="{Binding IsMF, Converter={StaticResource Boolean2VisibilityConverter}}">
+                            <hc:Badge
                             Margin="0,0,6,0"
-                            controls:BorderElement.CornerRadius="2"
-                            Command="{Binding OpenAddonsDialogCommand}"
-                            Content="插件管理"
-                            IsEnabled="{Binding IsRunning, Converter={StaticResource Boolean2BooleanReConverter}}"
-                            Style="{StaticResource ButtonWarning}" />
+                            Status="Processing"
+                            Style="{StaticResource BadgeDanger}"
+                            Visibility="{Binding Path=_ConfigManager.MFAddonHasUpdate, Converter={StaticResource Boolean2VisibilityConverter}}">
+                                <Button
+                                Margin="0,0,0,0"
+                                controls:BorderElement.CornerRadius="2"
+                                Command="{Binding OpenAddonsDialogCommand}"
+                                Content="插件管理"
+                                IsEnabled="{Binding IsRunning, Converter={StaticResource Boolean2BooleanReConverter}}"
+                                Style="{StaticResource ButtonWarning}" />
+                            </hc:Badge>
+                            <Button
+                                Margin="0,0,6,0"
+                                controls:BorderElement.CornerRadius="2"
+                                Command="{Binding OpenAddonsDialogCommand}"
+                                Content="插件管理"
+                                IsEnabled="{Binding IsRunning, Converter={StaticResource Boolean2BooleanReConverter}}"
+                                Style="{StaticResource ButtonWarning}"
+                                Visibility="{Binding Path=_ConfigManager.MFAddonHasUpdate, Converter={StaticResource Boolean2VisibilityReConverter}}"/>
+                        </DockPanel>
+
+                        <DockPanel Visibility="{Binding IsMF, Converter={StaticResource Boolean2VisibilityReConverter}}">
+                            <hc:Badge
+                            Margin="0,0,6,0"
+                            Status="Processing"
+                            Style="{StaticResource BadgeDanger}"
+                            Visibility="{Binding Path=_ConfigManager.GFAddonHasUpdate, Converter={StaticResource Boolean2VisibilityConverter}}">
+                                <Button
+                                Margin="0,0,0,0"
+                                controls:BorderElement.CornerRadius="2"
+                                Command="{Binding OpenAddonsDialogCommand}"
+                                Content="插件管理"
+                                IsEnabled="{Binding IsRunning, Converter={StaticResource Boolean2BooleanReConverter}}"
+                                Style="{StaticResource ButtonWarning}" />
+                            </hc:Badge>
+                            <Button
+                                Margin="0,0,6,0"
+                                controls:BorderElement.CornerRadius="2"
+                                Command="{Binding OpenAddonsDialogCommand}"
+                                Content="插件管理"
+                                IsEnabled="{Binding IsRunning, Converter={StaticResource Boolean2BooleanReConverter}}"
+                                Style="{StaticResource ButtonWarning}"
+                                Visibility="{Binding Path=_ConfigManager.GFAddonHasUpdate, Converter={StaticResource Boolean2VisibilityReConverter}}"/>
+                        </DockPanel>
+
                         <Button
                             controls:BorderElement.CornerRadius="2"
                             Command="{Binding OpenStartupArgumentsDialogCommand}"

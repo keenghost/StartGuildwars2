@@ -1,6 +1,6 @@
 {
   "name": "startguildwars2",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "a convenient pre-starter for guild wars 2",
   "repository": {
     "type": "git",
@@ -16,7 +16,8 @@
     "node": ">=8"
   },
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "update": "gulp update"
   },
   "devDependencies": {
     "del": "5.1.0",
