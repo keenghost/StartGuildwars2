@@ -218,14 +218,11 @@ namespace StartGuildwars2.Global
         public ObservableCollection<InstalledAddonItemModel> GFInstalledAddonList { get; private set; } = new ObservableCollection<InstalledAddonItemModel>();
         public bool MFAddonHasUpdate { get; private set; } = false;
         public bool GFAddonHasUpdate { get; private set; } = false;
+        public long LastMFAddonListSuccessTime { get; private set; } = 0;
+        public long LastGFAddonListSuccessTime { get; private set; } = 0;
 
-        public void ConstructAddonComponent(string GameType)
-        {
-            CheckInstalledAddonList(GameType);
-
-            FetchAddonList(GameType);
-        }
-
+        // 对比配置中已安装插件和激战2目录中已安装插件是否匹配
+        // 应当只在程序启动时执行一次
         public void CheckInstalledAddonList(string GameType)
         {
             var InstalledAddons = GetInstalledAddonList(GameType);
@@ -255,6 +252,30 @@ namespace StartGuildwars2.Global
 
         public void FetchAddonList(string GameType)
         {
+            if (GameType == "MF" && MFAddonListLoading)
+            {
+                return;
+            }
+            else if (GameType == "GF" && GFAddonListLoading)
+            {
+                return;
+            }
+
+            if (GameType == "MF")
+            {
+                if (UtilHelper.GetTimestampNow() - LastMFAddonListSuccessTime < 60000)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (UtilHelper.GetTimestampNow() - LastGFAddonListSuccessTime < 60000)
+                {
+                    return;
+                }
+            }
+
             if (GameType == "MF")
             {
                 MFAddonListLoading = true;
@@ -264,45 +285,6 @@ namespace StartGuildwars2.Global
                 GFAddonListLoading = true;
             }
 
-            Action<List<AddonItemModel>> SuccessCallback = (List<AddonItemModel> List) =>
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    if (GameType == "MF")
-                    {
-                        MFAddonList.Clear();
-                        foreach (var TempAddon in List)
-                        {
-                            MFAddonList.Add(TempAddon);
-                        }
-                    }
-                    else
-                    {
-                        GFAddonList.Clear();
-                        foreach (var TempAddon in List)
-                        {
-                            GFAddonList.Add(TempAddon);
-                        }
-                    }
-
-                    UpdateDisplayAddonList(GameType);
-                });
-            };
-            Action CompleteCallback = () =>
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    if (GameType == "MF")
-                    {
-                        MFAddonListLoading = false;
-                    }
-                    else
-                    {
-                        GFAddonListLoading = false;
-                    }
-                });
-            };
-
             HttpHelper.GetAsync(new RequestGetModel<List<AddonItemModel>>
             {
                 Path = "/api/v1/sgw2/addons",
@@ -311,11 +293,43 @@ namespace StartGuildwars2.Global
                 },
                 SuccessCallback = Res =>
                 {
-                    SuccessCallback.Invoke(Res.result);
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (GameType == "MF")
+                        {
+                            MFAddonList.Clear();
+                            foreach (var TempAddon in Res.result)
+                            {
+                                MFAddonList.Add(TempAddon);
+                            }
+                            LastMFAddonListSuccessTime = UtilHelper.GetTimestampNow();
+                        }
+                        else
+                        {
+                            GFAddonList.Clear();
+                            foreach (var TempAddon in Res.result)
+                            {
+                                GFAddonList.Add(TempAddon);
+                            }
+                            LastGFAddonListSuccessTime = UtilHelper.GetTimestampNow();
+                        }
+
+                        UpdateDisplayAddonList(GameType);
+                    });
                 },
                 CompleteCallback = () =>
                 {
-                    CompleteCallback.Invoke();
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (GameType == "MF")
+                        {
+                            MFAddonListLoading = false;
+                        }
+                        else
+                        {
+                            GFAddonListLoading = false;
+                        }
+                    });
                 },
             });
         }

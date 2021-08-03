@@ -40,7 +40,7 @@ namespace StartGuildwars2.ViewModel
             GameType = type;
             DialogTitle = "插件管理（" + (GameType == "GF" ? "国服" : "美服") + "）";
 
-            _ConfigManager.ConstructAddonComponent(GameType);
+            _ConfigManager.FetchAddonList(GameType);
         }
 
         private void Hyperlink(string uri)

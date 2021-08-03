@@ -40,10 +40,13 @@ namespace StartGuildwars2.ViewModel
             SetCurrentView("LAUNCHER");
             CheckUpdate();
 
+            _ConfigManager.CheckInstalledAddonList("MF");
+            _ConfigManager.CheckInstalledAddonList("GF");
+
             if (_ConfigManager.CheckAddonUpdateOnStartup)
             {
-                _ConfigManager.ConstructAddonComponent("MF");
-                _ConfigManager.ConstructAddonComponent("GF");
+                _ConfigManager.FetchAddonList("MF");
+                _ConfigManager.FetchAddonList("GF");
             }
         }
 
