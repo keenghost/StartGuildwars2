@@ -20,23 +20,23 @@ namespace StartGuildwars2.Helper
         [DllImport("kernel32.dll")]
         private static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
 
-        private static readonly long timeZero = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
+        private static readonly long ZeroTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
         public static int GetRandomNumber(int start, int end)
         {
             return new Random().Next(start, end);
         }
 
-        public static string GetTimestampNow()
+        public static long GetTimestampNow() // 毫秒
         {
-            return ((DateTime.UtcNow.Ticks - timeZero) / 10000000000L).ToString();
+            return (DateTime.UtcNow.Ticks - ZeroTime) / 10000;
         }
 
         public static string GetUniqueID()
         {
             var random = new Random();
 
-            return GetTimestampNow() + random.Next(100000, 999999).ToString();
+            return GetTimestampNow().ToString() + random.Next(100000, 999999).ToString();
         }
 
         public static JObject ReadJsonFile(string filepath)
